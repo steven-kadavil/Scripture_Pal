@@ -9,3 +9,9 @@ after running npx expo start: ✔ Expo Go 2.33.13 is recommended for SDK 53.0.0 
 Downloading the Expo Go app [===========================================] 100% 0.0s
 
 brew install watchman
+
+
+
+npm install --save-dev typescript @types/react @types/react-native (for type script)
+
+npx expo install expo-speech expo-av (for speech capabilities.)
