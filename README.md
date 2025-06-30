@@ -15,3 +15,6 @@ brew install watchman
 npm install --save-dev typescript @types/react @types/react-native (for type script)
 
 npx expo install expo-speech expo-av (for speech capabilities.)
+
+
+npx expo install react-dom react-native-web
