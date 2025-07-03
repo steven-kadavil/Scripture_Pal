@@ -169,7 +169,6 @@ export interface UserPreferences {
 }
 
 export interface AppSettings {
-    bibleApiKey: string;
     openaiApiKey?: string;
     defaultTranslation: string;
     fallbackVerses: string[];

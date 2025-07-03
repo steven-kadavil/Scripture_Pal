@@ -73,28 +73,7 @@ const getNumberEnvVar = (key: string, defaultValue: number): number => {
 // This section configures how your app talks to external services
 
 export const ApiConfig = {
-    // Bible API configuration (scripture.api.bible)
-    bible: {
-        // The web address where we get Bible verses
-        baseUrl: 'https://api.scripture.api.bible/v1',
-
-        // Your secret key to access the Bible API (GET THIS FROM scripture.api.bible)
-        key: getEnvVar('BIBLE_API_KEY', ''),
-
-        // Which Bible translation to use by default (ESV = English Standard Version)
-        defaultTranslation: 'de4e12af7f28f599-02', // ESV
-
-        // How long to wait for API response before giving up (10 seconds)
-        timeout: getNumberEnvVar('BIBLE_API_TIMEOUT', 10000),
-
-        // How many times to retry if API fails (3 attempts)
-        retryAttempts: getNumberEnvVar('BIBLE_API_RETRY_ATTEMPTS', 3),
-
-        // How long to wait between retries (1 second)
-        retryDelay: getNumberEnvVar('BIBLE_API_RETRY_DELAY', 1000)
-    },
-
-    // OpenAI configuration (for future AI features)
+    // OpenAI configuration (for AI features)
     openai: {
         // OpenAI's web address
         baseUrl: 'https://api.openai.com/v1',
@@ -114,8 +93,8 @@ export const ApiConfig = {
 // What settings the app starts with before user changes them
 
 export const DefaultUserPreferences: UserPreferences = {
-    // Which Bible translation to use (same as API default)
-    preferredTranslation: ApiConfig.bible.defaultTranslation,
+    // Which Bible translation to use (default to ESV)
+    preferredTranslation: 'de4e12af7f28f599-02', // ESV
 
     // Voice synthesis settings (how the app speaks)
     voiceSettings: {
@@ -195,14 +174,11 @@ export const FallbackVerses = [
 // Main configuration for the entire app
 
 export const DefaultAppSettings: AppSettings = {
-    // Your Bible API key (from the API config above)
-    bibleApiKey: ApiConfig.bible.key,
-
     // Your OpenAI key (optional, from API config above)
     openaiApiKey: ApiConfig.openai.key,
 
     // Default Bible translation
-    defaultTranslation: ApiConfig.bible.defaultTranslation,
+    defaultTranslation: 'de4e12af7f28f599-02', // ESV
 
     // Copy of the emergency verses
     fallbackVerses: [...FallbackVerses],
@@ -340,14 +316,14 @@ export const PerformanceConfig = {
     // Voice input timeout (10 seconds)
     voiceInputTimeout: DefaultVoiceInputConfig.timeoutMs,
 
-    // API timeout (10 seconds)
-    apiTimeout: ApiConfig.bible.timeout,
+    // API timeout (15 seconds for OpenAI)
+    apiTimeout: ApiConfig.openai.timeout,
 
     // How many times to retry failed requests (3)
-    maxRetryAttempts: ApiConfig.bible.retryAttempts,
+    maxRetryAttempts: 3,
 
     // How long to wait between retries (1 second)
-    retryDelay: ApiConfig.bible.retryDelay,
+    retryDelay: 1000,
 
     // Should the app remember recent verses? (yes, saves time)
     cacheEnabled: getBooleanEnvVar('CACHE_ENABLED', true),
@@ -389,19 +365,14 @@ export const FeatureFlags = {
 export const validateConfiguration = (): { isValid: boolean; errors: string[] } => {
     const errors: string[] = [];
 
-    // Check if Bible API key exists
-    if (!ApiConfig.bible.key) {
-        errors.push('BIBLE_API_KEY is required - get one from https://scripture.api.bible/');
-    }
-
-    // Check if Bible API key looks correct (should be a UUID format)
-    if (ApiConfig.bible.key && !ApiConfig.bible.key.match(/^[a-f0-9-]{36}$/)) {
-        errors.push('BIBLE_API_KEY appears to be invalid (should be UUID format like: 12345678-1234-1234-1234-123456789abc)');
+    // Check if OpenAI API key exists (optional for now)
+    if (!ApiConfig.openai.key) {
+        console.log('OpenAI API key not set - ChatGPT features will be disabled');
     }
 
     // Check timeout values aren't too short
-    if (ApiConfig.bible.timeout < 1000) {
-        errors.push('BIBLE_API_TIMEOUT should be at least 1000ms (1 second)');
+    if (ApiConfig.openai.timeout < 1000) {
+        errors.push('OPENAI_API_TIMEOUT should be at least 1000ms (1 second)');
     }
 
     if (DefaultVoiceInputConfig.timeoutMs < 5000) {
@@ -449,10 +420,6 @@ export const getEnvironmentInfo = () => ({
 
     // API status
     apis: {
-        bible: {
-            configured: !!ApiConfig.bible.key,  // Do we have a Bible API key?
-            translation: ApiConfig.bible.defaultTranslation
-        },
         openai: {
             configured: !!ApiConfig.openai.key,  // Do we have an OpenAI API key?
             model: ApiConfig.openai.model
