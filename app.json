@@ -1,30 +1,49 @@
 {
-  "expo": {
-    "name": "Scripture_Pal",
-    "slug": "Scripture_Pal",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "userInterfaceStyle": "light",
-    "newArchEnabled": true,
-    "plugins": [
-      "expo-speech-recognition"
-    ],
-    "ios": {
-      "supportsTablet": true,
-      "infoPlist": {
-        "NSSpeechRecognitionUsageDescription": "Allow $(PRODUCT_NAME) to use speech recognition.",
-        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to use the microphone."
-      },
-      "bundleIdentifier": "com.anonymous.Scripture-Pal"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "backgroundColor": "#ffffff"
-      },
-      "edgeToEdgeEnabled": true,
-      "permissions": [
-        "android.permission.RECORD_AUDIO"
-      ]
+    "expo": {
+        "name": "WiFi Config App",
+        "slug": "wifi-config-app",
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "userInterfaceStyle": "light",
+        "assetBundlePatterns": [
+            "**/*"
+        ],
+        "ios": {
+            "supportsTablet": true,
+            "infoPlist": {
+                "NSLocationWhenInUseUsageDescription": "This app needs location access to scan for WiFi networks",
+                "NSCameraUsageDescription": "This app needs camera access to scan QR codes",
+                "NSBluetoothAlwaysUsageDescription": "This app needs Bluetooth access to connect to Raspberry Pi",
+                "NSBluetoothPeripheralUsageDescription": "This app needs Bluetooth access to connect to Raspberry Pi"
+            }
+        },
+        "android": {
+            "permissions": [
+                "ACCESS_FINE_LOCATION",
+                "ACCESS_COARSE_LOCATION",
+                "ACCESS_WIFI_STATE",
+                "CHANGE_WIFI_STATE",
+                "CAMERA",
+                "BLUETOOTH",
+                "BLUETOOTH_ADMIN",
+                "BLUETOOTH_CONNECT",
+                "BLUETOOTH_SCAN"
+            ]
+        },
+        "web": {},
+        "plugins": [
+            [
+                "expo-camera",
+                {
+                    "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to scan QR codes."
+                }
+            ],
+            [
+                "expo-location",
+                {
+                    "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location to scan for WiFi networks."
+                }
+            ]
+        ]
     }
-  }
 }
